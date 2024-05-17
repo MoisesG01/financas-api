@@ -36,6 +36,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	}
 
 	@Override
+	@Transactional
 	public Lancamento atualizar(Lancamento lancamento) {
 		Objects.requireNonNull(lancamento.getId());
 		validar(lancamento);
@@ -45,9 +46,13 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional
 	public void deletar(Lancamento lancamento) {
-		Objects.requireNonNull(lancamento.getId());
-		repository.delete(lancamento);	
+	    if (lancamento.getId() != 0) {
+	        repository.delete(lancamento);    
+	    } else {
+	        throw new IllegalArgumentException("ID de lançamento inválido: " + lancamento.getId());
+	    }
 	}
+
 
 	@Override
 	@Transactional(readOnly = true)
